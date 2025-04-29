@@ -10,7 +10,11 @@ interface ClassCardProps {
 
 export default function ClassCard({ wowClass }: ClassCardProps) {
   return (
-    <Link href={`/${wowClass.id}`} className="block group relative rounded-lg overflow-hidden shadow-lg bg-gray-900 hover:scale-[1.03] transition-transform duration-300 ease-in-out border border-gray-700 hover:border-yellow-500">
+    <Link
+      href={`/${wowClass.id}`}
+      className="block group relative rounded-lg overflow-hidden shadow-lg bg-gray-900 hover:scale-[1.03] transition-transform duration-300 ease-in-out border border-gray-700 hover:border-yellow-500 
+                 w-full sm:w-[calc(50%-theme(spacing.4))] lg:w-[calc(33.333%-theme(spacing.5))] xl:w-[calc(33.333%-theme(spacing.6))]"
+    >
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
          {wowClass.imageUrl ? (
