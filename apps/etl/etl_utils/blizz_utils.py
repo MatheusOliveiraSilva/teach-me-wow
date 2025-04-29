@@ -39,3 +39,19 @@ class BlizzUtils:
         )
         resp.raise_for_status()
         return resp.json()    
+    def get_classes_dict(self) -> dict:
+        """
+        Returns a dictionary with the name of the class as the key and the id and href as the values.
+        """
+        print("[ETL] Getting classes...")
+        response = self.api_get("/data/wow/playable-class/index")
+        
+        class_dict = {}
+        for v in response["classes"]:
+            class_dict[v["name"]] = {
+                'href': v['key']['href'], 'id': v['id'], 
+                "specs": [], "class_nodes": []
+            }
+
+        return class_dict
+    
