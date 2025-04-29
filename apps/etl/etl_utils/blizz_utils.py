@@ -86,3 +86,24 @@ class BlizzUtils:
             classes_dict[original_class]["specs"].append(spec_data)
 
         return classes_dict
+    def get_talent_trees_urls(self):
+        """
+        Returns a dictionary with the name of the talent tree as the key and the url as the value.
+        """
+
+        print("[ETL] Getting talent trees urls...")
+        response = self.api_get(f"/data/wow/talent-tree/index")
+
+        spec_talent_trees = {}
+        for item in response["spec_talent_trees"]:
+            spec_talent_trees[item["name"]] = item["key"]["href"].split("?namespace")[0].split(".com")[1]
+
+        class_talent_trees = {}
+        for item in response["class_talent_trees"]:
+            class_talent_trees[item["name"]] = item["key"]["href"].split("?namespace")[0].split(".com")[1]
+
+        hero_talent_trees = {}
+        for item in response["hero_talent_trees"]:
+            hero_talent_trees[item["name"]] = item["key"]["href"].split("?namespace")[0].split(".com")[1]
+
+        return spec_talent_trees, class_talent_trees, hero_talent_trees
