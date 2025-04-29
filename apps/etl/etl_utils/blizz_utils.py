@@ -55,3 +55,18 @@ class BlizzUtils:
 
         return class_dict
     
+    def get_specs_dict(self) -> dict:
+        """
+        Returns a dictionary with the name of the specialization as the key and the id and href as the values.
+        """
+        print("[ETL] Getting specs...")
+        response = self.api_get("/data/wow/playable-specialization/index")
+
+        spec_dict = {}
+        for v in response["character_specializations"]:
+            spec_dict[v["name"]] = {
+                'href': v['key']['href'], 'id': v['id'],
+                "class_nodes": []
+            }
+
+        return spec_dict
