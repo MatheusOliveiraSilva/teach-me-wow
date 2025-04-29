@@ -14,8 +14,9 @@ export async function generateStaticParams(): Promise<ClassPageParams[]> {
   return wowClasses.map((cls) => ({ classSlug: cls.id }));
 }
 
-export default function ClassPage({ params }: { params: ClassPageParams }) {
-  const { classSlug } = params;
+// Make the component function async
+export default async function ClassPage({ params }: { params: ClassPageParams }) {
+  const { classSlug } = params; // Access params within async function
   const wowClass = getClassById(classSlug);
 
   // If class not found, return 404

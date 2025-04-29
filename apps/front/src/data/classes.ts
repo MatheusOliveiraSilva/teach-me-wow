@@ -131,7 +131,7 @@ export const wowClasses: WowClass[] = [
     iconUrl: '/shamman/shamman.jpg',  
     specializations: [
       { id: 'elemental', name: 'Elemental', iconUrl: '/shamman/shamman_elemental.jpg' },
-      { id: 'enhancement', name: 'Enhancement', iconUrl: '/shamman/shamman_enh.jpg' },
+      { id: 'enhancement', name: 'Enhancement', iconUrl: '/shamman/shamman_enh.jpeg' },
       { id: 'restoration', name: 'Restoration', iconUrl: '/shamman/shamman_resto.jpg' },
     ],
   },
@@ -152,8 +152,8 @@ export const wowClasses: WowClass[] = [
     imageUrl: '/war/warrior.jpg', // Using folder name
     iconUrl: '/war/warrior.jpg',   // Using folder name
     specializations: [
-      { id: 'arms', name: 'Arms', iconUrl: '/war/warrior_arms.png' }, 
-      { id: 'fury', name: 'Fury', iconUrl: '/war/warrior_fury.jpeg' }, 
+      { id: 'arms', name: 'Arms', iconUrl: '/war/warrior_arms.png' },
+      { id: 'fury', name: 'Fury', iconUrl: '/war/warrior_fury.jpeg' },
       { id: 'protection', name: 'Protection', iconUrl: '/war/warrior_prot.jpg' },
     ],
   },

@@ -20,7 +20,8 @@ export async function generateStaticParams(): Promise<SpecPageParams[]> {
   return paths;
 }
 
-export default function SpecializationPage({ params }: { params: SpecPageParams }) {
+// Make the component function async
+export default async function SpecializationPage({ params }: { params: SpecPageParams }) {
   const { classSlug, specSlug } = params;
   const wowClass = getClassById(classSlug);
   const specialization = getSpecializationById(classSlug, specSlug);
