@@ -9,3 +9,6 @@ dependencies = [
     "langchain_openai",
     "langchain_anthropic"
 ]
+
+[tool.setuptools]
+packages = ["api", "workflow"]
