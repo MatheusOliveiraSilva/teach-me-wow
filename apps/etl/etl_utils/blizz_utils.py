@@ -3,7 +3,7 @@ from config import CACHE_FILE, CLIENT_ID, CLIENT_SECRET, BLIZZ_API, NAMESPACE, L
 
 class BlizzUtils:
     def __init__(self):
-        self.token = self.get_token()
+        self.token = self.get_access_token()
 
     @staticmethod
     def get_access_token() -> str:
@@ -28,9 +28,8 @@ class BlizzUtils:
         return data["access_token"]
 
     def api_get(self, path: str) -> dict:
-        token = self.get_access_token()
         url   = BLIZZ_API + path
-        headers = {"Authorization": f"Bearer {token}"}
+        headers = {"Authorization": f"Bearer {self.token}"}
         resp = requests.get(
             url,
             params={"namespace": NAMESPACE, "locale": LOCALE},
@@ -39,6 +38,7 @@ class BlizzUtils:
         )
         resp.raise_for_status()
         return resp.json()    
+    
     def get_classes_dict(self) -> dict:
         """
         Returns a dictionary with the name of the class as the key and the id and href as the values.
@@ -70,3 +70,19 @@ class BlizzUtils:
             }
 
         return spec_dict
+    def merge_specs_into_classes_dict(self, classes_dict: dict, specs_dict: dict) -> dict:
+        """
+        Merges the specs into the classes dictionary.
+        """
+        print("[ETL] Merging specs into classes...")
+        
+        for _, spec_data in specs_dict.items():
+            specId = spec_data["id"]
+            response = self.api_get(f"/data/wow/playable-specialization/{specId}")
+            
+            original_class = response["playable_class"]["name"]
+            spec_data["spec_name"] = response["name"]
+
+            classes_dict[original_class]["specs"].append(spec_data)
+
+        return classes_dict
