@@ -1,14 +1,12 @@
 [project]
-name = "agent"
+name = "knowledge-graph"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "langgraph",
+    "neo4j",
     "langchain_openai",
-    "langchain_anthropic"
+    "pydantic",
+    "langchain-community"
 ]
-
-[tool.setuptools]
-packages = ["api", "workflow"]
