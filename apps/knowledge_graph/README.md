@@ -3,9 +3,10 @@
 This component builds a Neo4j-based knowledge graph from World of Warcraft talent tree data, using LLMs to extract relationships between skills, buffs, and other game mechanics.
 
 ### Example Graph Structure
-![image](https://github.com/user-attachments/assets/7b5a9924-29a5-4dd0-8021-975a0ef8183b)
-![image](https://github.com/user-attachments/assets/0bfddaf4-db02-4c75-bc1f-54a44e7c1892)
-
+<div style="display: flex; justify-content: space-between;">
+  <img src="https://github.com/user-attachments/assets/7b5a9924-29a5-4dd0-8021-975a0ef8183b" width="49%" />
+  <img src="https://github.com/user-attachments/assets/0bfddaf4-db02-4c75-bc1f-54a44e7c1892" width="49%" />
+</div>
 
 ## Overview
 
