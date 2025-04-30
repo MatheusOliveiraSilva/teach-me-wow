@@ -8,5 +8,7 @@ dependencies = [
     "neo4j",
     "langchain_openai",
     "pydantic",
-    "langchain-community"
+    "langchain-community",
+    "langchain-experimental",
+    "langchain-neo4j>=0.4.0",
 ]
