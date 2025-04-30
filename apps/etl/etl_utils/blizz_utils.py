@@ -133,3 +133,48 @@ class BlizzUtils:
             print(class_dict[class_name]["class_nodes"])
 
         return class_dict
+    
+    @staticmethod
+    def process_talent_node(node, target_list):
+        """Process a single talent node and add it to the target list."""
+        try:
+            if "choice_of_tooltips" in node["ranks"][0]:
+                # Process choice nodes
+                for choice in node["ranks"][0]["choice_of_tooltips"]:
+                    spell_name = choice["talent"]["name"]
+                    spell_description = choice["spell_tooltip"]["description"]
+                    target_list.append((spell_name, spell_description))
+            else:
+                # Process regular nodes
+                spell_name = node["ranks"][0]["tooltip"]["spell_tooltip"]["spell"]["name"]
+                spell_description = node["ranks"][0]["tooltip"]["spell_tooltip"]["description"]
+                target_list.append((spell_name, spell_description))
+            return True
+        except:
+            return False
+    
+    def process_hero_talent_trees(self, hero_trees, target_list):
+        """Process all hero talent trees and add nodes to the target list."""
+        for tree in hero_trees:
+            for node in tree["hero_talent_nodes"]:
+                if not self.process_talent_node(node, target_list):
+                    print("Skipping node: ", node)
+
+    def extract_spec_talents(self, class_dict, spec_talent_trees):
+        """Extract all talent information for each class and specialization."""
+        for class_name in class_dict:
+            print("Exploring class: ", class_name)
+            for spec in class_dict[class_name]["specs"]:
+                print("Exploring spec: ", spec["spec_name"])
+                print(spec_talent_trees[spec["spec_name"]])
+                response = self.api_get(spec_talent_trees[spec["spec_name"]])
+                
+                # Process spec talent nodes
+                for item in response["spec_talent_nodes"]:
+                    if not self.process_talent_node(item, spec["spec_nodes"]):
+                        print("Skipping node: ", item)
+                
+                # Process hero talent nodes
+                self.process_hero_talent_trees(response["hero_talent_trees"], spec["hero_talent_nodes"])
+        
+        return class_dict
