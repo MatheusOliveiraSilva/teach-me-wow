@@ -66,10 +66,11 @@ class BlizzUtils:
         for v in response["character_specializations"]:
             spec_dict[v["name"]] = {
                 'href': v['key']['href'], 'id': v['id'],
-                "class_nodes": []
+                "spec_nodes": [], "hero_talent_nodes": []
             }
 
         return spec_dict
+    
     def merge_specs_into_classes_dict(self, classes_dict: dict, specs_dict: dict) -> dict:
         """
         Merges the specs into the classes dictionary.
@@ -86,6 +87,7 @@ class BlizzUtils:
             classes_dict[original_class]["specs"].append(spec_data)
 
         return classes_dict
+    
     def get_talent_trees_urls(self):
         """
         Returns a dictionary with the name of the talent tree as the key and the url as the value.
@@ -107,3 +109,27 @@ class BlizzUtils:
             hero_talent_trees[item["name"]] = item["key"]["href"].split("?namespace")[0].split(".com")[1]
 
         return spec_talent_trees, class_talent_trees, hero_talent_trees
+    
+    def extract_class_skills_info(self, class_dict, class_talent_trees):
+        for class_name in class_dict:
+            response = self.api_get(class_talent_trees[class_name])
+
+            for node in response["talent_nodes"]:
+                try:
+                    # Check if node has choice_of_tooltips
+                    if "choice_of_tooltips" in node["ranks"][0]:
+                        # Process choice nodes
+                        for choice in node["ranks"][0]["choice_of_tooltips"]:
+                            spell_name = choice["talent"]["name"]
+                            spell_description = choice["spell_tooltip"]["description"]
+                            class_dict[class_name]["class_nodes"].append((spell_name, spell_description))
+                    else:
+                        # Process regular nodes (original code)
+                        spell_name = node["ranks"][0]["tooltip"]["spell_tooltip"]["spell"]["name"]
+                        spell_description = node["ranks"][0]["tooltip"]["spell_tooltip"]["description"]
+                        class_dict[class_name]["class_nodes"].append((spell_name, spell_description))
+                except:
+                    print("Skipping node: ", node)
+            print(class_dict[class_name]["class_nodes"])
+
+        return class_dict
