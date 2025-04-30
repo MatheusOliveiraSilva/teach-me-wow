@@ -73,3 +73,4 @@ nosetests.xml
 coverage.xml
 *.cover
 .hypothesis/
+.blizz_token_cache.json
