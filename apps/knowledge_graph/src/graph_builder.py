@@ -1,7 +1,10 @@
 import os
 import sys
 import json
+import time
+import logging
 from pathlib import Path
+from typing import List, Dict, Any
 
 # Adicionar o diretório raiz ao Python path
 root_dir = str(Path(__file__).parent.parent.parent.parent)
@@ -17,9 +20,14 @@ from graph_structure_prompt import DB_GRAPH_PROMPT
 
 load_dotenv()
 
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+
 class DBToGraph:
     def __init__(self, wow_tree_nodes_data_path: str) -> None:
         self.wow_tree_nodes_data_path = wow_tree_nodes_data_path
+        self.checkpoint_path = os.path.join(os.path.dirname(wow_tree_nodes_data_path), "kg_checkpoint.json")
 
         # Modify temperature and model_name experimentally if need some improvements.
         self.llm = LLMConfig(provider="azure", model="gpt-4o").get_llm()
@@ -70,17 +78,70 @@ class DBToGraph:
                         
         return talents_documents
 
-    def create_kg(self):
+    def create_kg(self, max_retries: int = 3, retry_delay: int = 5):
         with open(self.wow_tree_nodes_data_path, "r") as file:
             wow_tree_nodes_data = json.load(file)
 
         talents_documents = self.parse_json_items_to_langchain_documents(wow_tree_nodes_data)
-
-        #print(talents_documents[0].page_content)
-        for document in talents_documents:
-            print("Document: ", document.page_content)
-            graph_from_docs = self.llm_transformer.convert_to_graph_documents([document])
-            self.graph.add_graph_documents(graph_from_docs, include_source=False)
+        
+        # Load checkpoint if exists
+        processed_indices = self._load_checkpoint()
+        logger.info(f"Loaded checkpoint: {len(processed_indices)} documents already processed")
+        
+        for idx, document in enumerate(talents_documents):
+            # Skip already processed documents
+            if idx in processed_indices:
+                logger.info(f"Skipping document {idx} (already processed)")
+                continue
+                
+            logger.info(f"Processing document {idx}/{len(talents_documents)}: {document.page_content[:50]}...")
+            
+            retry_count = 0
+            success = False
+            
+            while not success and retry_count < max_retries:
+                try:
+                    print(f"Document {idx}: {document.page_content}")
+                    graph_from_docs = self.llm_transformer.convert_to_graph_documents([document])
+                    self.graph.add_graph_documents(graph_from_docs, include_source=False)
+                    
+                    # Mark as processed and save checkpoint
+                    processed_indices.append(idx)
+                    self._save_checkpoint(processed_indices)
+                    
+                    success = True
+                    
+                except Exception as e:
+                    retry_count += 1
+                    logger.error(f"Error processing document {idx} (attempt {retry_count}/{max_retries}): {str(e)}")
+                    
+                    if retry_count < max_retries:
+                        logger.info(f"Retrying in {retry_delay} seconds...")
+                        time.sleep(retry_delay)
+                    else:
+                        logger.error(f"Max retries reached for document {idx}. Moving to next document.")
+        
+        logger.info(f"Knowledge graph creation completed. Processed {len(processed_indices)}/{len(talents_documents)} documents.")
+    
+    def _load_checkpoint(self) -> List[int]:
+        """Load the checkpoint file containing indices of processed documents"""
+        if not os.path.exists(self.checkpoint_path):
+            return []
+            
+        try:
+            with open(self.checkpoint_path, 'r') as f:
+                return json.load(f)
+        except Exception as e:
+            logger.error(f"Error loading checkpoint: {str(e)}")
+            return []
+    
+    def _save_checkpoint(self, processed_indices: List[int]) -> None:
+        """Save the current progress to checkpoint file"""
+        try:
+            with open(self.checkpoint_path, 'w') as f:
+                json.dump(processed_indices, f)
+        except Exception as e:
+            logger.error(f"Error saving checkpoint: {str(e)}")
 
 if __name__ == "__main__":
     
