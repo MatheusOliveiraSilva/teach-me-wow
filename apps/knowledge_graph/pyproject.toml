@@ -1,0 +1,14 @@
+[project]
+name = "knowledge-graph"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "neo4j",
+    "langchain_openai",
+    "pydantic",
+    "langchain-community",
+    "langchain-experimental",
+    "langchain-neo4j>=0.4.0",
+]
