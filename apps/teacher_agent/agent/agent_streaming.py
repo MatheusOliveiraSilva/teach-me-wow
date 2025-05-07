@@ -28,12 +28,13 @@ class AgentStreaming:
             chunk_type = meta.get("langgraph_node", None)
 
             # If the chunk is empty, skip it, to avoid spending network bandwidth
-            if chunk_type == "assistant" and chunk.content == "":
-                continue
+            if chunk_type == "assistant":
+                if chunk.content == "":
+                    continue
+            
+                response_obj = {
+                    "content": chunk.content,
+                    "meta": meta
+                }
 
-            response_obj = {
-                "content": chunk.content,
-                "meta": meta
-            }
-
-            yield f"data: {json.dumps(response_obj)} \n\n"
+                yield f"data: {json.dumps(response_obj)} \n\n"
