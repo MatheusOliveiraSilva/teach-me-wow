@@ -7,6 +7,7 @@ requires-python = ">=3.12"
 dependencies = [
     "beautifulsoup4>=4.13.4",
     "bs4>=0.0.2",
+    "fastapi>=0.115.12",
     "ipykernel>=6.29.5",
     "langchain-community>=0.3.23",
     "langchain-core>=0.3.58",
@@ -16,10 +17,13 @@ dependencies = [
     "lxml[html-clean]>=5.4.0",
     "pinecone[grpc]>=6.0.2",
     "playwright>=1.52.0",
+    "psycopg2-binary>=2.9.10",
     "python-dotenv>=1.1.0",
     "requests-html>=0.10.0",
+    "sqlalchemy>=2.0.40",
     "tdqm>=0.0.1",
     "tqdm>=4.67.1",
     "unstructured>=0.17.2",
+    "uvicorn>=0.34.2",
     "websockets==9.1",
 ]
