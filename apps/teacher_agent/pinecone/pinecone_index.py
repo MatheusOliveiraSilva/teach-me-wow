@@ -1,6 +1,6 @@
 from pinecone.grpc import PineconeGRPC as Pinecone
 from pinecone import ServerlessSpec
-import index_settings
+import apps.teacher_agent.pinecone.index_settings as index_settings
 
 class PineconeIndex:
     """
