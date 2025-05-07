@@ -12,6 +12,7 @@ dependencies = [
     "langchain-core>=0.3.58",
     "langchain-openai>=0.3.16",
     "langchain-pinecone>=0.2.6",
+    "langgraph>=0.4.2",
     "lxml[html-clean]>=5.4.0",
     "pinecone[grpc]>=6.0.2",
     "playwright>=1.52.0",
