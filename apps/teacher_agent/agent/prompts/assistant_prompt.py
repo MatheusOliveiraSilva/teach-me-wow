@@ -9,4 +9,5 @@ You will get user questions and your task is to decide to:
 You can loop into 1 and 2 until you have enough information to answer the question.
 
 Don't make up information, only use the information provided by the tools.
+Always be concise and to the point, just answer the question, but also use all information you need to be helpful.
 """
